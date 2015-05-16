@@ -49,14 +49,46 @@ module.exports = function (grunt) {
             ngconstant: {
                 files: ['Gruntfile.js', <% if(buildTool == 'maven') { %>'pom.xml'<% } else { %>'build.gradle'<% } %>],
                 tasks: ['ngconstant:dev']
-            },<% if (useCompass) { %>
+            },
+            injectJS: {
+                files: [
+                    'src/main/webapp/scripts/**/*.js',
+                    '!src/main/webapp/scripts/**/*.spec.js',
+                    '!src/main/webapp/scripts/**/*.mock.js',
+                    '!src/main/webapp/scripts/app.js'
+                ],
+                tasks: ['injector:scripts'],
+                options: {
+                    event: ['added', 'deleted']
+                }
+            },
+            injectCss: {
+                files: [
+                    'src/main/webapp/assets/styles/**/*.css',
+                    '!src/main/webapp/assets/styles/main.css',
+                    '!src/main/webapp/assets/styles/documentation.css',
+                    'src/main/webapp/scripts/**/*.css'
+                ],
+                tasks: ['injector:css'],
+                options: {
+                    event: ['added', 'deleted']
+                }
+            }<% if (useCompass) { %>,
+            injectSass: {
+                files: [
+                    'src/main/scss/**/*.{scss,sass}',
+                    '!src/main/scss/main.scss',
+                    'src/main/webapp/scripts/**/*.{scss,sass}'
+                ],
+                tasks: ['injector:sass'],
+                options: {
+                    event: ['added', 'deleted']
+                }
+            },
             compass: {
-                files: ['src/main/scss/**/*.{scss,sass}'],
+                files: ['src/main/scss/**/*.{scss,sass}', 'src/main/webapp/scripts/**/*.{scss,sass}'],
                 tasks: ['compass:server']
-            },<% } %>
-            styles: {
-                files: ['src/main/webapp/assets/styles/**/*.css']
-            }
+            }<% } %>
         },
         autoprefixer: {
         // not used since Uglify task does autoprefixer,
@@ -103,6 +135,71 @@ module.exports = function (grunt) {
                 }
             }
         },
+        injector: {
+            options: {
+
+            },
+
+            // Inject application script files into index.html (doesn't include bower)
+            scripts: {
+                options: {
+                    transform: function(filePath) {
+                        filePath = filePath.replace('/src/main/webapp/', '');
+                        return '<script src="' + filePath + '"></script>';
+                    },
+                    starttag: '<!-- injector:js -->',
+                    endtag: '<!-- endinjector -->'
+                },
+                files: {
+                    'src/main/webapp/index.html': [
+                        'src/main/webapp/scripts/**/*.js',
+                        '!src/main/webapp/scripts/**/*.spec.js',
+                        '!src/main/webapp/scripts/**/*.mock.js',
+                        '!src/main/webapp/scripts/app/app.js'
+                    ]
+                }
+            },
+
+            // Inject component css into index.html
+            css: {
+                options: {
+                    transform: function(filePath) {
+                        filePath = filePath.replace('/src/main/webapp/', '');
+                        return '<link rel="stylesheet" href="' + filePath + '">';
+                    },
+                    starttag: '<!-- injector:css -->',
+                    endtag: '<!-- endinjector -->'
+                },
+                files: {
+                    'src/main/webapp/index.html': [
+                        'src/main/webapp/assets/styles/**/*.css',
+                        '!src/main/webapp/assets/styles/main.css',
+                        '!src/main/webapp/assets/styles/documentation.css',
+                        'src/main/webapp/scripts/**/*.css'
+                    ]
+                }
+            }<% if (useCompass) { %>,
+
+            // Inject component scss into main.scss
+            sass: {
+                options: {
+                    transform: function(filePath) {
+                        filePath = filePath.replace('/src/main/webapp/scripts', '../webapp/scripts');
+                        filePath = filePath.replace('/src/main/scss/', '');
+                        return '@import \'' + filePath + '\';';
+                    },
+                    starttag: '// injector',
+                    endtag: '// endinjector'
+                },
+                files: {
+                    'src/main/scss/main.scss': [
+                        'src/main/scss/**/*.{scss,sass}',
+                        '!src/main/scss/main.scss',
+                        'src/main/webapp/scripts/**/*.{scss,sass}'
+                    ]
+                }
+            }<% } %>
+        },
         browserSync: {
             dev: {
                 bsFiles: {
@@ -110,7 +207,7 @@ module.exports = function (grunt) {
                         'src/main/webapp/**/*.html',
                         'src/main/webapp/**/*.json',
                         'src/main/webapp/assets/styles/**/*.css',
-                        'src/main/webapp/scripts/**/*.js',
+                        'src/main/webapp/scripts/**/*.{css,js}',
                         'src/main/webapp/assets/images/**/*.{png,jpg,jpeg,gif,webp,svg}',
                         'tmp/**/*.{css,js}'
                     ]
@@ -427,8 +524,10 @@ module.exports = function (grunt) {
     grunt.registerTask('serve', [
         'clean:server',
         'wiredep',
-        'ngconstant:dev',
+        'ngconstant:dev',<% if (useCompass) { %>
+        'injector:sass',<% } %>
         'concurrent:server',
+        'injector',
         'browserSync',
         'watch'
     ]);
@@ -441,8 +540,10 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'clean:server',
         'wiredep:test',
-        'ngconstant:dev',
+        'ngconstant:dev',<% if (useCompass) { %>
+        'injector:sass',<% } %>
         'concurrent:test',
+        'injector',
         'karma'
     ]);
 
@@ -451,8 +552,10 @@ module.exports = function (grunt) {
         'wiredep:app',
         'ngconstant:prod',
         'useminPrepare',
-        'ngtemplates',
+        'ngtemplates',<% if (useCompass) { %>
+        'injector:sass',<% } %>
         'concurrent:dist',
+        'injector',
         'concat',
         'copy:dist',
         'ngAnnotate',

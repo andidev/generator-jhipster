@@ -13,6 +13,8 @@
         <!-- endbuild -->
         <!-- build:css assets/styles/main.css -->
         <link rel="stylesheet" href="assets/styles/main.css">
+        <!-- injector:css -->
+        <!-- endinjector -->
         <!-- endbuild -->
     </head>
     <body ng-app="<%= angularAppName %>">
@@ -44,5 +46,10 @@
         <!-- endbower -->
         <!-- endbuild -->
 
+        <!-- build:js({.tmp,src/main/webapp}) scripts/app.js -->
+        <script src="scripts/app/app.js"></script>
+        <!-- injector:js -->
+        <!-- endinjector -->
+        <!-- endbuild -->
     </body>
 </html>

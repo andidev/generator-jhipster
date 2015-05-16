@@ -901,93 +901,6 @@ JhipsterGenerator.prototype.app = function app() {
     this.copy(webappDir + 'assets/images/hipster.png', webappDir + 'assets/images/hipster.png');
     this.copy(webappDir + 'assets/images/hipster2x.png', webappDir + 'assets/images/hipster2x.png');
 
-    var appScripts = [
-        'scripts/app/app.js',
-        'scripts/app/app.constants.js',
-        'scripts/components/auth/auth.service.js',
-        'scripts/components/auth/principal.service.js',
-        'scripts/components/auth/authority.directive.js',
-        'scripts/components/auth/services/account.service.js',
-        'scripts/components/auth/services/activate.service.js',
-        'scripts/components/auth/services/password.service.js',
-        'scripts/components/auth/services/register.service.js',
-        'scripts/components/form/form.directive.js',
-        'scripts/components/form/pager.directive.js',
-        'scripts/components/form/pagination.directive.js',
-        'scripts/components/language/language.service.js',
-        'scripts/components/language/language.controller.js',
-        'scripts/components/admin/audits.service.js',
-        'scripts/components/admin/logs.service.js',
-        'scripts/components/admin/configuration.service.js',
-        'scripts/components/admin/monitoring.service.js',
-        'scripts/components/navbar/navbar.directive.js',
-        'scripts/components/navbar/navbar.controller.js',
-        'scripts/components/user/user.service.js',
-        'scripts/components/util/truncate.filter.js',
-        'scripts/components/util/base64.service.js',
-        'scripts/components/util/parse-links.service.js',
-        'scripts/app/account/account.js',
-        'scripts/app/account/activate/activate.js',
-        'scripts/app/account/activate/activate.controller.js',
-        'scripts/app/account/login/login.js',
-        'scripts/app/account/login/login.controller.js',
-        'scripts/app/account/logout/logout.js',
-        'scripts/app/account/logout/logout.controller.js',
-        'scripts/app/account/password/password.js',
-        'scripts/app/account/password/password.controller.js',
-        'scripts/app/account/password/password.directive.js',
-        'scripts/app/account/register/register.js',
-        'scripts/app/account/register/register.controller.js',
-        'scripts/app/account/settings/settings.js',
-        'scripts/app/account/settings/settings.controller.js',
-        'scripts/app/account/reset/finish/reset.finish.controller.js',
-        'scripts/app/account/reset/finish/reset.finish.js',
-        'scripts/app/account/reset/request/reset.request.controller.js',
-        'scripts/app/account/reset/request/reset.request.js',
-        'scripts/app/admin/admin.js',
-        'scripts/app/admin/audits/audits.js',
-        'scripts/app/admin/audits/audits.controller.js',
-        'scripts/app/admin/configuration/configuration.js',
-        'scripts/app/admin/configuration/configuration.controller.js',
-        'scripts/app/admin/docs/docs.js',
-        'scripts/app/admin/health/health.js',
-        'scripts/app/admin/health/health.controller.js',
-        'scripts/app/admin/logs/logs.js',
-        'scripts/app/admin/logs/logs.controller.js',
-        'scripts/app/admin/metrics/metrics.js',
-        'scripts/app/admin/metrics/metrics.controller.js',
-        'scripts/app/entities/entity.js',
-        'scripts/app/error/error.js',
-        'scripts/app/main/main.js',
-        'scripts/app/main/main.controller.js'
-        ];
-
-    if (this.authenticationType == 'xauth'){
-        appScripts = appScripts.concat([
-            'scripts/components/auth/provider/auth.xauth.service.js']);
-    }
-
-    if (this.authenticationType == 'oauth2') {
-        appScripts = appScripts.concat([
-            'scripts/components/auth/provider/auth.oauth2.service.js']);
-    }
-
-    if (this.authenticationType == 'session'){
-        appScripts = appScripts.concat([
-            'scripts/components/auth/services/sessions.service.js',
-            'scripts/components/auth/provider/auth.session.service.js',
-            'scripts/app/account/sessions/sessions.js',
-            'scripts/app/account/sessions/sessions.controller.js']);
-    }
-
-    if (this.websocket == 'spring-websocket') {
-        appScripts = appScripts.concat([
-            'scripts/app/admin/tracker/tracker.js',
-            'scripts/app/admin/tracker/tracker.controller.js',
-            'scripts/components/tracker/tracker.service.js'])
-    }
-
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/app.js', appScripts, {}, ['.tmp', 'src/main/webapp']);
     this.write(webappDir + 'index.html', this.indexFile);
 
     this.config.set('baseName', this.baseName);
@@ -1036,6 +949,9 @@ JhipsterGenerator.prototype._injectDependenciesAndConstants = function _injectDe
             '\n' +
             '\n' + chalk.yellow.bold('grunt wiredep') +
             '\n' +
+            '\n ...and inject application js, css, scss files by running:' +
+            '\n' + chalk.yellow.bold('grunt injector') +
+            '\n' +
             '\n ...and generate the Angular constants with:' +
             '\n' + chalk.yellow.bold('grunt ngconstant:dev')
         );
@@ -1046,7 +962,7 @@ JhipsterGenerator.prototype._injectDependenciesAndConstants = function _injectDe
                 break;
             case 'grunt':
             default:
-                this.spawnCommand('grunt', ['ngconstant:dev', 'wiredep']);
+                this.spawnCommand('grunt', ['ngconstant:dev', 'wiredep', 'injector']);
         }
     }
 };

@@ -772,23 +772,18 @@ EntityGenerator.prototype.files = function files() {
 
     this.template('src/main/webapp/app/_entity.js',
         'src/main/webapp/scripts/app/entities/' +    this.entityInstance + '/' + this.entityInstance + '.js', this, {});
-    this.addAppScriptToIndex(this.entityInstance + '/' + this.entityInstance + '.js');
     this.template('src/main/webapp/app/_entity-controller.js',
         'src/main/webapp/scripts/app/entities/' +    this.entityInstance + '/' + this.entityInstance + '.controller' + '.js', this, {});
-    this.addAppScriptToIndex(this.entityInstance + '/' + this.entityInstance + '.controller' + '.js');
 
     this.template('src/main/webapp/app/_entity-detail-controller.js',
         'src/main/webapp/scripts/app/entities/' +    this.entityInstance + '/' + this.entityInstance + '-detail.controller' + '.js', this, {});
-    this.addAppScriptToIndex(this.entityInstance + '/' + this.entityInstance + '-detail.controller' + '.js');
 
     this.template('src/main/webapp/components/_entity-service.js',
         'src/main/webapp/scripts/components/entities/' + this.entityInstance + '/' + this.entityInstance + '.service' + '.js', this, {});
-    this.addComponentsScriptToIndex(this.entityInstance + '/' + this.entityInstance + '.service' + '.js');
 
     if (this.searchEngine == 'elasticsearch') {
         this.template('src/main/webapp/components/_entity-search-service.js',
             'src/main/webapp/scripts/components/entities/' + this.entityInstance + '/' + this.entityInstance + '.search.service' + '.js', this, {});
-        this.addComponentsScriptToIndex(this.entityInstance + '/' + this.entityInstance + '.search.service' + '.js');
     }
 
     this.template('src/test/java/package/web/rest/_EntityResourceTest.java',

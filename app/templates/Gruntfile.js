@@ -52,7 +52,7 @@ module.exports = function (grunt) {
             },
             injectJS: {
                 files: [
-                    'src/main/webapp/scripts/**/*.js',
+                    'src/main/webapp/scripts/**/*', // non specific to .js files since issue https://github.com/gruntjs/grunt-contrib-watch/issues/436
                     '!src/main/webapp/scripts/**/*.spec.js',
                     '!src/main/webapp/scripts/**/*.mock.js',
                     '!src/main/webapp/scripts/app.js'
@@ -64,10 +64,10 @@ module.exports = function (grunt) {
             },
             injectCss: {
                 files: [
-                    'src/main/webapp/assets/styles/**/*.css',
+                    'src/main/webapp/assets/styles/**/*', // non specific to .css files since issue https://github.com/gruntjs/grunt-contrib-watch/issues/436
                     '!src/main/webapp/assets/styles/main.css',
                     '!src/main/webapp/assets/styles/documentation.css',
-                    'src/main/webapp/scripts/**/*.css'
+                    'src/main/webapp/scripts/**/*' // non specific to .css files since issue https://github.com/gruntjs/grunt-contrib-watch/issues/436
                 ],
                 tasks: ['injector:css'],
                 options: {
@@ -76,9 +76,9 @@ module.exports = function (grunt) {
             }<% if (useCompass) { %>,
             injectSass: {
                 files: [
-                    'src/main/scss/**/*.{scss,sass}',
+                    'src/main/scss/**/*', // non specific to .{scss,sass} files since issue https://github.com/gruntjs/grunt-contrib-watch/issues/436
                     '!src/main/scss/main.scss',
-                    'src/main/webapp/scripts/**/*.{scss,sass}'
+                    'src/main/webapp/scripts/**/*' // non specific to .{scss,sass} files since issue https://github.com/gruntjs/grunt-contrib-watch/issues/436
                 ],
                 tasks: ['injector:sass'],
                 options: {

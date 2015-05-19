@@ -152,10 +152,10 @@ module.exports = function (grunt) {
                 },
                 files: {
                     'src/main/webapp/index.html': [
+                        'src/main/webapp/scripts/app/app.js',
                         'src/main/webapp/scripts/**/*.js',
                         '!src/main/webapp/scripts/**/*.spec.js',
-                        '!src/main/webapp/scripts/**/*.mock.js',
-                        '!src/main/webapp/scripts/app/app.js'
+                        '!src/main/webapp/scripts/**/*.mock.js'
                     ]
                 }
             },
@@ -172,8 +172,8 @@ module.exports = function (grunt) {
                 },
                 files: {
                     'src/main/webapp/index.html': [
+                        'src/main/webapp/assets/styles/mains.css',
                         'src/main/webapp/assets/styles/**/*.css',
-                        '!src/main/webapp/assets/styles/main.css',
                         '!src/main/webapp/assets/styles/documentation.css',
                         'src/main/webapp/scripts/**/*.css'
                     ]

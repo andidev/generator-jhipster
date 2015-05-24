@@ -755,6 +755,7 @@ JhipsterGenerator.prototype.app = function app() {
 
     // normal CSS or SCSS?
     if (this.useCompass) {
+        this.copy('src/main/scss/vendor.scss', 'src/main/scss/vendor.scss');
         this.copy('src/main/scss/main.scss', 'src/main/scss/main.scss');
     } else {
         this.copy('src/main/webapp/assets/styles/main.css', 'src/main/webapp/assets/styles/main.css');

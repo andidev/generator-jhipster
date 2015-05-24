@@ -72,7 +72,7 @@ module.exports = function (grunt) {
         },
         wiredep: {
             app: {<% if (useCompass) { %>
-                src: ['src/main/webapp/index.html', 'src/main/scss/main.scss'],
+                src: ['src/main/webapp/index.html', 'src/main/scss/vendor.scss'],
                 exclude: [
                     /angular-i18n/, // localizations are loaded dynamically
                     /swagger-ui/,

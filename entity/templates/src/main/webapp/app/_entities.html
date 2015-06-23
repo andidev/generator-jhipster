@@ -50,8 +50,10 @@
         fieldInputType = 'datetime-local';
     } else if (fields[fieldId].fieldType == 'Boolean') {
         fieldInputType = 'checkbox';
+    } else if (fields[fieldId].fieldType == 'byte[]') {
+        fieldInputType = 'hidden';
     } %>
-                        <div class="form-group">
+                        <div class="form-group"<% if (fields[fieldId].fieldType == 'byte[]') { %> ngf-drop ngf-change="set<%= fields[fieldId].fieldNameCapitalized %>($files, <%= entityInstance %>)"<% } %>>
                             <label translate="<%= translationKey %>"><%=fields[fieldId].fieldNameCapitalized%></label><% if (fields[fieldId].fieldIsEnum) { %>
                             <select class="form-control" name="<%= fields[fieldId].fieldName %>" ng-model="<%= entityInstance %>.<%= fields[fieldId].fieldName %>"<% if (fields[fieldId].fieldValidate == true && fields[fieldId].fieldValidateRules.indexOf('required') != -1) { %> required<% } %>><%
                                 var values = fields[fieldId].fieldValues.split(",");
@@ -59,7 +61,19 @@
                                     var value = values[key]; %>
                                 <option value="<%= value %>"><%= value %></option><%
                                 } %>
-                            </select><% } else { %>
+                            </select><% } else { %><% if (fields[fieldId].fieldType == 'byte[]') { %>
+                            <div>
+                                <div class="help-block clearfix">
+                                    <span class="pull-left">{{formatBase64String(<%= entityInstance %>.<%= fields[fieldId].fieldName %>)}}</span>
+                                    <button ng-click="<%= entityInstance %>.<%= fields[fieldId].fieldName %>=null"
+                                            ng-if="<%= entityInstance %>.<%= fields[fieldId].fieldName %>"
+                                            class="btn btn-default btn-xs pull-right">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                </div>
+                                <button type="file" ngf-select class="btn btn-default btn-block"
+                                        ngf-change="set<%= fields[fieldId].fieldNameCapitalized %>($files, <%= entityInstance %>)" translate="entity.action.addblob">Add blob</button><% } %>
+                            </div>
                             <input type="<%= fieldInputType %>" class="form-control" name="<%= fields[fieldId].fieldName %>"
                                    ng-model="<%= entityInstance %>.<%= fields[fieldId].fieldName %>"<% if (fields[fieldId].fieldType == 'DateTime') { %> ng-model-options="{timezone: 'UTC'}"<% } %><% if (fields[fieldId].fieldValidate == true) {
                                        if (fields[fieldId].fieldValidateRules.indexOf('required') != -1) {
@@ -67,7 +81,9 @@
                                        %> ng-minlength="<%= fields[fieldId].fieldValidateRulesMinlength %>"<% } %><% if (fields[fieldId].fieldValidateRules.indexOf('maxlength') != -1) {
                                        %> ng-maxlength="<%= fields[fieldId].fieldValidateRulesMaxlength %>"<% } %><% if (fields[fieldId].fieldValidateRules.indexOf('min') != -1) {
                                        %> min="<%= fields[fieldId].fieldValidateRulesMin %>"<% } %><% if (fields[fieldId].fieldValidateRules.indexOf('max') != -1) {
-                                       %> max="<%= fields[fieldId].fieldValidateRulesMax %>"<% } %><% if (fields[fieldId].fieldValidateRules.indexOf('pattern') != -1) {
+                                       %> max="<%= fields[fieldId].fieldValidateRulesMax %>"<% } %><% if (fields[fieldId].fieldValidateRules.indexOf('minbytes') != -1) {
+                                       %> minbytes="<%= fields[fieldId].fieldValidateRulesMinbytes %>"<% } %><% if (fields[fieldId].fieldValidateRules.indexOf('maxbytes') != -1) {
+                                       %> maxbytes="<%= fields[fieldId].fieldValidateRulesMaxbytes %>"<% } %><% if (fields[fieldId].fieldValidateRules.indexOf('pattern') != -1) {
                                        %> ng-pattern="/<%= fields[fieldId].fieldValidateRulesPattern %>/"<% } } %>><% } %>
 <% if (fields[fieldId].fieldValidate == true) { %>
                             <div ng-show="editForm.<%= fields[fieldId].fieldName %>.$invalid"><% if (fields[fieldId].fieldValidateRules.indexOf('required') != -1) { %>
@@ -90,6 +106,14 @@
                                 <p class="help-block"
                                    ng-show="editForm.<%= fields[fieldId].fieldName %>.$error.max" translate="entity.validation.max" translate-value-max="<%= fields[fieldId].fieldValidateRulesMax %>">
                                     This field cannot be more than <%= fields[fieldId].fieldValidateRulesMax %>.
+                                </p><% } %><% if (fields[fieldId].fieldValidateRules.indexOf('minbytes') != -1) { %>
+                                <p class="help-block"
+                                   ng-show="editForm.<%= fields[fieldId].fieldName %>.$error.minbytes" translate="entity.validation.minbytes" translate-value-min="<%= fields[fieldId].fieldValidateRulesMinbytes %>">
+                                    This field should be more than <%= fields[fieldId].fieldValidateRulesMinbytes %>.
+                                </p><% } %><% if (fields[fieldId].fieldValidateRules.indexOf('maxbytes') != -1) { %>
+                                <p class="help-block"
+                                   ng-show="editForm.<%= fields[fieldId].fieldName %>.$error.maxbytes" translate="entity.validation.maxbytes" translate-value-max="<%= fields[fieldId].fieldValidateRulesMaxbytes %>">
+                                    This field cannot be more than <%= fields[fieldId].fieldValidateRulesMaxbytes %>.
                                 </p><% } %><% if (fields[fieldId].fieldValidateRules.indexOf('pattern') != -1) { %>
                                 <p class="help-block"
                                    ng-show="editForm.<%= fields[fieldId].fieldName %>.$error.pattern" translate="entity.validation.pattern" translate-value-pattern="<%= fields[fieldId].fieldValidateRulesPattern %>">
@@ -181,7 +205,7 @@
             <tbody<% if (pagination == 'infinite-scroll') { %> infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page"<% } %>>
                 <tr ng-repeat="<%=entityInstance %> in <%=entityInstance %>s">
                     <td><a ui-sref="<%= entityInstance %>Detail({id:<%= entityInstance %>.id})">{{<%=entityInstance %>.id}}</a></td><% for (fieldId in fields) { %>
-                    <td>{{<%=entityInstance %>.<%=fields[fieldId].fieldName%>}}</td><% } %><% for (relationshipId in relationships) {
+                    <td><% if (fields[fieldId].fieldType == 'byte[]') { %>{{formatBase64String(<%= entityInstance %>.<%= fields[fieldId].fieldName %>)}}<% } else { %>{{<%=entityInstance %>.<%=fields[fieldId].fieldName%>}}<% } %></td><% } %><% for (relationshipId in relationships) {
                         if (relationships[relationshipId].relationshipType == 'many-to-one') {
                             var relationShipValue = entityInstance + "." + relationships[relationshipId].relationshipFieldName + "." + relationships[relationshipId].otherEntityField;
                             if (dto == 'mapstruct') {

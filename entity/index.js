@@ -87,6 +87,7 @@ var EntityGenerator = module.exports = function EntityGenerator(args, options, c
     this.fieldsContainDateTime = false; // JodaTime
     this.fieldsContainCustomTime = false;
     this.fieldsContainBigDecimal = false;
+    this.fieldsContainBlob = false;
     this.fieldsContainOwnerManyToMany = false;
     this.fieldsContainOwnerOneToOne = false;
     this.fieldsContainOneToMany = false;
@@ -189,6 +190,10 @@ EntityGenerator.prototype.askForFields = function askForFields() {
                 {
                     value: 'enum',
                     name: 'Enumeration (Java enum type)'
+                },
+                {
+                    value: 'Blob',
+                    name: 'Blob'
                 }
             ],
             default: 0
@@ -326,7 +331,8 @@ EntityGenerator.prototype.askForFields = function askForFields() {
                     response.fieldType == 'DateTime' ||
                     response.fieldType == 'UUID' ||
                     response.fieldType == 'TimeUUID' ||
-                    response.fieldIsEnum == true);
+                    response.fieldIsEnum == true ||
+                    response.fieldType == 'Blob');
             },
             type: 'checkbox',
             name: 'fieldValidateRules',
@@ -469,6 +475,9 @@ EntityGenerator.prototype.askForFields = function askForFields() {
             if (props.fieldType == 'Date') {
                 this.fieldsContainDate = true;
                 this.fieldsContainCustomTime = true;
+            }
+            if (props.fieldType == 'Blob') {
+                this.fieldsContainBlob = true;
             }
             if (props.fieldValidate) {
                 this.validation = true;
@@ -781,6 +790,7 @@ EntityGenerator.prototype.files = function files() {
         this.data.fieldsContainBigDecimal = this.fieldsContainBigDecimal;
         this.data.fieldsContainDateTime = this.fieldsContainDateTime;
         this.data.fieldsContainDate = this.fieldsContainDate;
+        this.data.fieldsContainBlob = this.fieldsContainBlob;
         this.data.changelogDate = this.changelogDate;
         this.data.dto = this.dto;
         this.data.pagination = this.pagination;
@@ -810,6 +820,7 @@ EntityGenerator.prototype.files = function files() {
         this.fieldsContainBigDecimal = this.fileData.fieldsContainBigDecimal;
         this.fieldsContainDateTime = this.fileData.fieldsContainDateTime;
         this.fieldsContainDate = this.fileData.fieldsContainDate;
+        this.fieldsContainBlob = this.fileData.fieldsContainBlob;
         this.changelogDate = this.fileData.changelogDate;
         for (var idx in this.relationships) {
           var rel = this.relationships[idx];

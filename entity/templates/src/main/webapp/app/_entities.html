@@ -50,6 +50,8 @@
         fieldInputType = 'datetime-local';
     } else if (fields[fieldId].fieldType == 'Boolean') {
         fieldInputType = 'checkbox';
+    } else if (fields[fieldId].fieldType == 'Blob') {
+        fieldInputType = 'file';
     } %>
                         <div class="form-group">
                             <label translate="<%= translationKey %>"><%=fields[fieldId].fieldNameCapitalized%></label><% if (fields[fieldId].fieldIsEnum) { %>

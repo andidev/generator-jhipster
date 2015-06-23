@@ -50,6 +50,8 @@
         fieldInputType = 'datetime-local';
     } else if (fields[fieldId].fieldType == 'Boolean') {
         fieldInputType = 'checkbox';
+    } else if (fields[fieldId].fieldType == 'byte[]') {
+        fieldInputType = 'file';
     } %>
                         <div class="form-group">
                             <label translate="<%= translationKey %>"><%=fields[fieldId].fieldNameCapitalized%></label><% if (fields[fieldId].fieldIsEnum) { %>
@@ -59,9 +61,17 @@
                                     var value = values[key]; %>
                                 <option value="<%= value %>"><%= value %></option><%
                                 } %>
-                            </select><% } else { %>
-                            <input type="<%= fieldInputType %>" class="form-control" name="<%= fields[fieldId].fieldName %>"
-                                   ng-model="<%= entityInstance %>.<%= fields[fieldId].fieldName %>"<% if (fields[fieldId].fieldType == 'DateTime') { %> ng-model-options="{timezone: 'UTC'}"<% } %><% if (fields[fieldId].fieldValidate == true) {
+                            </select><% } else { %><% if (fields[fieldId].fieldType == 'byte[]') { %>
+                            <div class="help-block">
+                                <span class="pull-left">{{abbreviate(<%= entityInstance %>.<%= fields[fieldId].fieldName %>)}}</span>
+                                <button ng-click="<%= entityInstance %>.<%= fields[fieldId].fieldName %>=null"
+                                        ng-if="<%= entityInstance %>.<%= fields[fieldId].fieldName %>"
+                                        class="btn btn-default btn-xs pull-right">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </div><% } %>
+                            <input type="<%= fieldInputType %>" class="form-control" name="<%= fields[fieldId].fieldName %>"<% if (fields[fieldId].fieldType == 'byte[]') { %> file-input<% } %>
+                                   ng-model="<%= entityInstance %>.<%= fields[fieldId].fieldName %>"<% if (fields[fieldId].fieldType == 'DateTime') { %> ng-model-options="{timezone: 'UTC'}"<% } %><% if (fields[fieldId].fieldType == 'byte[]') { %> ng-if="!<%= entityInstance %>.<%= fields[fieldId].fieldName %>"<% } %><% if (fields[fieldId].fieldValidate == true) {
                                        if (fields[fieldId].fieldValidateRules.indexOf('required') != -1) {
                                        %> required<% } %><% if (fields[fieldId].fieldValidateRules.indexOf('minlength') != -1) {
                                        %> ng-minlength="<%= fields[fieldId].fieldValidateRulesMinlength %>"<% } %><% if (fields[fieldId].fieldValidateRules.indexOf('maxlength') != -1) {
@@ -181,7 +191,7 @@
             <tbody<% if (pagination == 'infinite-scroll') { %> infinite-scroll="loadPage(page + 1)" infinite-scroll-disabled="links['last'] == page"<% } %>>
                 <tr ng-repeat="<%=entityInstance %> in <%=entityInstance %>s">
                     <td><a ui-sref="<%= entityInstance %>Detail({id:<%= entityInstance %>.id})">{{<%=entityInstance %>.id}}</a></td><% for (fieldId in fields) { %>
-                    <td>{{<%=entityInstance %>.<%=fields[fieldId].fieldName%>}}</td><% } %><% for (relationshipId in relationships) {
+                    <td><% if (fields[fieldId].fieldType == 'byte[]') { %>{{abbreviate(<%= entityInstance %>.<%= fields[fieldId].fieldName %>)}}<% } else { %>{{<%=entityInstance %>.<%=fields[fieldId].fieldName%>}}<% } %></td><% } %><% for (relationshipId in relationships) {
                         if (relationships[relationshipId].relationshipType == 'many-to-one') {
                             var relationShipValue = entityInstance + "." + relationships[relationshipId].relationshipFieldName + "." + relationships[relationshipId].otherEntityField;
                             if (dto == 'mapstruct') {

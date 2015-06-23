@@ -95,5 +95,12 @@ angular.module('<%=angularAppName%>')
             $scope.<%= entityInstance %> = {<% for (fieldId in fields) { %><%= fields[fieldId].fieldName %>: null, <% } %>id: null};
             $scope.editForm.$setPristine();
             $scope.editForm.$setUntouched();
-        };
+        };<% if (fieldsContainBlob) { %>
+
+        $scope.abbreviate = function (text) {
+            if (!angular.isString(text) || text.length < 30) {
+                return text;
+            }
+            return text ? (text.substring(0, 20) + '...' + text.slice(-10)) : '';
+        };<% } %>
     });

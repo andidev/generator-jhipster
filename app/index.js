@@ -860,6 +860,7 @@ JhipsterGenerator.prototype.app = function app() {
     this.template(webappDir + '/scripts/components/form/_pager.html', webappDir + 'scripts/components/form/pager.html', this, {});
     this.template(webappDir + '/scripts/components/form/_pagination.directive.js', webappDir + 'scripts/components/form/pagination.directive.js', this, {});
     this.template(webappDir + '/scripts/components/form/_pagination.html', webappDir + 'scripts/components/form/pagination.html', this, {});
+    this.template(webappDir + '/scripts/components/form/_inputfile.directive.js', webappDir + 'scripts/components/form/inputfile.directive.js', this, {});
     if (this.enableTranslation) {
         this.template(webappDir + '/scripts/components/language/_language.controller.js', webappDir + 'scripts/components/language/language.controller.js', this, {});
         this.template(webappDir + '/scripts/components/language/_language.service.js', webappDir + 'scripts/components/language/language.service.js', this, {});
@@ -975,6 +976,7 @@ JhipsterGenerator.prototype.app = function app() {
         'scripts/components/form/form.directive.js',
         'scripts/components/form/pager.directive.js',
         'scripts/components/form/pagination.directive.js',
+        'scripts/components/form/inputfile.directive.js',
         'scripts/components/admin/audits.service.js',
         'scripts/components/admin/logs.service.js',
         'scripts/components/admin/configuration.service.js',

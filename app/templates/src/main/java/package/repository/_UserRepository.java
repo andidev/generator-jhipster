@@ -43,6 +43,9 @@ public interface UserRepository extends <% if (databaseType == 'sql') { %>JpaRep
 
     Optional<User> findOneById(<%= pkType %> userId);
 
+    @Query("select user from User user where user.login = ?#{principal.username}")
+    User findOneByCurrentUser();
+
     @Override
     void delete(User t);
 

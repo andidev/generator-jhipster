@@ -1150,9 +1150,9 @@ module.exports = JhipsterGenerator.extend({
             this.copyHtml(WEBAPP_DIR + '/scripts/app/error/accessdenied.html', WEBAPP_DIR + 'scripts/app/error/accessdenied.html');
             this.copyJs(WEBAPP_DIR + '/scripts/app/entities/_entity.js', WEBAPP_DIR + 'scripts/app/entities/entity.js', this, {});
             this.copyJs(WEBAPP_DIR + '/scripts/app/error/_error.js', WEBAPP_DIR + 'scripts/app/error/error.js', this, {});
-            this.copyHtml(WEBAPP_DIR + '/scripts/app/main/main.html', WEBAPP_DIR + 'scripts/app/main/main.html');
-            this.copyJs(WEBAPP_DIR + '/scripts/app/main/_main.js', WEBAPP_DIR + 'scripts/app/main/main.js', this, {});
-            this.template(WEBAPP_DIR + '/scripts/app/main/_main.controller.js', WEBAPP_DIR + 'scripts/app/main/main.controller.js', this, {});
+            this.copyHtml(WEBAPP_DIR + '/scripts/app/home/home.html', WEBAPP_DIR + 'scripts/app/home/home.html');
+            this.copyJs(WEBAPP_DIR + '/scripts/app/home/_home.js', WEBAPP_DIR + 'scripts/app/home/home.js', this, {});
+            this.template(WEBAPP_DIR + '/scripts/app/home/_home.controller.js', WEBAPP_DIR + 'scripts/app/home/home.controller.js', this, {});
 
             // Social
             if (this.enableSocialSignIn) {
@@ -1264,8 +1264,8 @@ module.exports = JhipsterGenerator.extend({
                 'scripts/app/admin/user-management/user-management.js',
                 'scripts/app/entities/entity.js',
                 'scripts/app/error/error.js',
-                'scripts/app/main/main.js',
-                'scripts/app/main/main.controller.js'
+                'scripts/app/home/home.js',
+                'scripts/app/home/home.controller.js'
             ];
             if (this.enableTranslation) {
                 appScripts = appScripts.concat([
@@ -1450,6 +1450,35 @@ module.exports = JhipsterGenerator.extend({
                 this.removefile('profile_prod.gradle');
                 this.removefile('sonar.gradle');
                 this.removefile('yeoman.gradle');
+            }
+
+            if (this.installedVersionIsLessThan('2.27.1', this.jhipsterVersion)) {
+                this.removefile(WEBAPP_DIR + 'scripts/app/main/main.controller.js');
+                this.removefile(WEBAPP_DIR + 'scripts/app/main/main.js');
+                this.removefile(WEBAPP_DIR + 'scripts/app/main/main.html');
+                this.removefolder(WEBAPP_DIR + 'scripts/app/main/');
+                this.removefile(WEBAPP_DIR + 'i18n/en/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/fr/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/ca/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/da/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/de/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/es/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/gl/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/hu/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/it/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/ja/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/ko/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/nl/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/pl/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/pt-br/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/pt-pt/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/ro/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/ru/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/sv/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/ta/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/tr/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/zh-cn/main.json');
+                this.removefile(WEBAPP_DIR + 'i18n/zh-tw/main.json');
             }
         }
     },

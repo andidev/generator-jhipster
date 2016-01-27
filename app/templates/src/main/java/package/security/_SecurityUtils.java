@@ -55,17 +55,26 @@ public final class SecurityUtils {
     }
 
     /**
+     * Return the current user id, or throws an exception, if the user is not authenticated yet.
+     *
+     * @return the current user id
+     */
+    public static <%= pkType %> getCurrentLoginId() {
+        return getCurrentUser().getId();
+    }
+
+    /**
      * Return the current user, or throws an exception, if the user is not
      * authenticated yet.
      *
      * @return the current user
      */
-    public static User getCurrentUser() {
+    public static CustomUserDetails getCurrentUser() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         if (authentication != null) {
-            if (authentication.getPrincipal() instanceof User) {
-                return (User) authentication.getPrincipal();
+            if (authentication.getPrincipal() instanceof CustomUserDetails) {
+                return (CustomUserDetails) authentication.getPrincipal();
             }
         }
         throw new IllegalStateException("User not found!");

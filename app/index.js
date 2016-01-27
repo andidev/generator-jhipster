@@ -919,6 +919,7 @@ module.exports = JhipsterGenerator.extend({
             if (this.databaseType == 'sql' || this.databaseType == 'mongodb') {
                 this.template('src/main/java/package/security/_SpringSecurityAuditorAware.java', javaDir + 'security/SpringSecurityAuditorAware.java', this, {});
             }
+            this.template('src/main/java/package/security/_CustomUserDetails.java', javaDir + 'security/CustomUserDetails.java', this, {});
             this.template('src/main/java/package/security/_UserDetailsService.java', javaDir + 'security/UserDetailsService.java', this, {});
             this.template('src/main/java/package/security/_UserNotActivatedException.java', javaDir + 'security/UserNotActivatedException.java', this, {});
 
